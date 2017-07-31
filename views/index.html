@@ -19,11 +19,49 @@
   </head>
   <body>
     <div class="jumbotron">
-      <div class="container">
+          <div class="container">
         <h1>Welcome to tunely</h1>
         <p>Your music binder!</p>
       </div>
     </div>
+
+    <section class="container">
+
+      <!--artist name-->
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <form method="post" action="/album">
+            <input type="text" class="form-control" value="Artist name">
+            <input type="button" class="btn btn-default" value="Submit">
+        </div> 
+      </div>
+
+      <!--album name-->
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <input type="text" class="form-control" value="Album Name">
+            <input type="submit" class="btn btn-default" value="Submit">
+        </div> 
+      </div>
+
+      <!-- release date -->
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <input type="date" class="form-control" value="Release Date">
+            <input type="submit" class="btn btn-default" value="Submit">
+        </div> 
+      </div>
+
+      <!--genres-->
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <input type="text" class="form-control" value="Genres">
+            <input type="submit" class="btn btn-default" value="Submit">
+        </div> 
+      </div>
+    </form>
+    </section>
+
 
     <section class="container">
       <div class="row">
@@ -38,15 +76,15 @@
 
 
           <!-- one album -->
-          <div class="row album">
+          <!-- <div class="row album">
 
             <div class="col-md-10 col-md-offset-1">
               <div class="panel panel-default">
                 <div class="panel-body">
 
-
+ -->
                 <!-- begin album internal row -->
-                  <div class='row'>
+                 <!--  <div class='row'>
                     <div class="col-md-3 col-xs-12 thumbnail album-art">
                       <img src="http://placehold.it/800x800" alt="album image">
                     </div>
@@ -70,16 +108,16 @@
                       </ul>
                     </div>
 
-                  </div>
+                  </div> -->
                   <!-- end of album internal row -->
-
+<!-- 
                   <div class='panel-footer'>
                   </div>
 
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- end one album -->
 
 
