@@ -5,6 +5,12 @@ var express = require('express');
 // generate a new express app and call it 'app'
 var app = express();
 
+var db = require('./models');
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
+
+
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
 
@@ -14,8 +20,6 @@ app.use(express.static(__dirname + '/public'));
 
 /* hard-coded data */
 var albums = [];
-
-const db = require('./models');
 
 /**********
  * ROUTES *
@@ -49,6 +53,17 @@ app.get('/api/albums', function album_index(req, res){
   db.Album.find({}, function (error, Albums){
     res.json(Albums);
   });
+});
+
+app.post('/api/albums', function(req, res){
+
+  console.log("controller");
+
+  db.Album.create({"artistName": req.body.artistName, name: req.body.album, releaseDate: req.body.releaseDate, genre: req.body.genre}, function(err, album){
+      // console.log(Albums);
+      res.render(Album, {album: album});
+  });
+
 });
 
 /**********

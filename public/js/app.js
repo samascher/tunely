@@ -38,22 +38,43 @@ $(document).ready(function() {
   console.log('app.js loaded!');
 
   $.get("http://localhost:3000/api/albums")
-
     .done(function(data){
       var kanyeAlbums = data;
       kanyeAlbums.forEach(function(kanyeAlbum){
       renderAlbum(kanyeAlbum);
     });
       });
+    addAlbum();
   });
 
-$(".btn").onClick(function(){
+function addAlbum() {
+  $('form').submit(function(){
+    console.log('submit pressed');
+    event.preventDefault();
+    var formData = $(this).serialize();
+    console.log(formData);
+    $(this).trigger('reset');
+  });
 
-  
+  var newAlbum = {
+    name: $('#name').val(),
+    artistName: $('#textinput').val(),
+    releaseDate: $('#releaseDate').val(),
+    genre: $('#genres').val(),
+  };
 
-  var formdata = $(this).serialize();
-  $(this).trigger("reset");
-});
+  console.log(newAlbum);
+
+  $.ajax({
+    url: "http://localhost:3000/api/albums",
+    dataType: "json",
+    method: "POST",
+    data: JSON.stringify(newAlbum),
+    sucess: function(element) {
+      console.log("it worked");
+    }
+  });
+}
 
 // this function takes a single album and renders it to the page
 function renderAlbum(album) {
