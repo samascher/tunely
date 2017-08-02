@@ -5,7 +5,8 @@
  *
  */
 
-/* hard-coded data! */
+
+/* hard-coded data */
 var sampleAlbums = [];
 sampleAlbums.push({
              artistName: 'Ladyhawke',
@@ -36,45 +37,69 @@ sampleAlbums.push({
 
 $(document).ready(function() {
   console.log('app.js loaded!');
-
-  $.get("http://localhost:3000/api/albums")
-    .done(function(data){
-      var kanyeAlbums = data;
-      kanyeAlbums.forEach(function(kanyeAlbum){
-      renderAlbum(kanyeAlbum);
+  $.get("http://localhost:3000/api/albums").done(function(data) {
+    let kanyeAlbums = data;
+      kanyeAlbums.forEach(function(album) {
+        console.log("The new album created is " + album);
+        renderAlbum(album);
     });
-      });
-    addAlbum();
   });
 
-function addAlbum() {
-  $('form').submit(function(){
-    console.log('submit pressed');
+  $("form").on("submit", function(event) {
     event.preventDefault();
-    var formData = $(this).serialize();
-    console.log(formData);
-    $(this).trigger('reset');
+    var datastring = $(this).serialize();
+    console.log(datastring);
+    $.ajax({
+      type: "POST",
+      url: '/api/albums',
+      data: datastring,
+      dataType: "json",
+      success: function(data) {
+        //var obj = jQuery.parseJSON(data);
+      }, error: function() {
+        console.log("error posting form data");
+      }
+
+    });
+    // ).done(function( response ) {
+    //   console.log(response);
+      
+    // });
+    //$(this).trigger("reset");
   });
 
-  var newAlbum = {
-    name: $('#name').val(),
-    artistName: $('#textinput').val(),
-    releaseDate: $('#releaseDate').val(),
-    genre: $('#genres').val(),
-  };
-
-  console.log(newAlbum);
-
-  $.ajax({
-    url: "http://localhost:3000/api/albums",
-    dataType: "json",
-    method: "POST",
-    data: JSON.stringify(newAlbum),
-    sucess: function(element) {
-      console.log("it worked");
-    }
+  $('#addSong').click(function() {
+    console.log("add song clicked");
   });
+  $('#deleteButton').click(function() {
+    console.log("delete button clicked");
+  });
+   
+});
+
+
+function buildSongsHtml(songs) {
+  console.log(songs);
+  console.log("making songs");
+  var songText = "--";
+  songs.forEach(function(song) {
+    console.log(song.trackNumber);
+    console.log(song.name);
+    songText = songText + "(" + song.trackNumber + ")" + song.name + "-";
+  });
+  var songHTML =  
+   "   <!-- one song -->" +
+    "<li class='list-group-item'>" +
+    "<h4 class='inline-header'>Songs:</h4>" +
+    "<span>" + songText + "</span>" +
+    "</li>"+
+    "  <!-- end one song -->";
+  console.log(songHTML);
+  return songHTML;
+  
 }
+
+
 
 // this function takes a single album and renders it to the page
 function renderAlbum(album) {
@@ -82,7 +107,7 @@ function renderAlbum(album) {
 
   var albumHtml =
   "        <!-- one album -->" +
-  "        <div class='row album' data-album-id='" + "HARDCODED ALBUM ID" + "'>" +
+  "        <div class='row album' data-album-id='" + album._id + "'>" +
   "          <div class='col-md-10 col-md-offset-1'>" +
   "            <div class='panel panel-default'>" +
   "              <div class='panel-body'>" +
@@ -99,11 +124,11 @@ function renderAlbum(album) {
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Artist Name:</h4>" +
-  "                        <span class='artist-name'>" + album.artistName + "</span>" +
+  "                        <span class='artist-name'>" +  album.artistName + "</span>" +
   "                      </li>" +
-  "                      <li class='list-group-item'>" +
+  "                      <li id='albumReleaseDate' class='list-group-item'>" +
   "                        <h4 class='inline-header'>Released date:</h4>" +
-  "                        <span class='album-name'>" + album.releaseDate + "</span>" +
+  "                        <span class='album-releaseDate'>" + album.releaseDate + "</span>" +
   "                      </li>" +
   "                    </ul>" +
   "                  </div>" +
@@ -118,6 +143,14 @@ function renderAlbum(album) {
   "            </div>" +
   "          </div>" +
   "          <!-- end one album -->";
-  //render to the page with jQuery
+
+  
+  // render to the page with jQuery
   $('#albums').append(albumHtml);
- }
+ 
+  var songsArray = album.songs;
+  console.log("the album array is " + songsArray);
+  buildSongsHtml(songsArray);
+  //$('#albumReleaseDate').append(songHTML);
+
+}

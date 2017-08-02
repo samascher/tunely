@@ -4,23 +4,12 @@
 var express = require('express');
 // generate a new express app and call it 'app'
 var app = express();
-
-var db = require('./models');
-
-var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended: true}));
-
-
+var createAlbums = require('./seed.js');
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
-
-/************
- * DATABASE *
- ************/
-
-/* hard-coded data */
-var albums = [];
-
+var db = require('./models');
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
 /**********
  * ROUTES *
  **********/
@@ -28,11 +17,10 @@ var albums = [];
 /*
  * HTML Endpoints
  */
-
+createAlbums();
 app.get('/', function homepage (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
-
 
 /*
  * JSON API Endpoints
@@ -50,19 +38,36 @@ app.get('/api', function api_index (req, res){
 });
 
 app.get('/api/albums', function album_index(req, res){
-  db.Album.find({}, function (error, Albums){
-    res.json(Albums);
+  db.Album.find({}, function(err, albums) {
+    res.json(albums);
   });
+  
 });
 
-app.post('/api/albums', function(req, res){
+// Add New albums
 
-  console.log("controller");
-
-  db.Album.create({"artistName": req.body.artistName, name: req.body.album, releaseDate: req.body.releaseDate, genre: req.body.genre}, function(err, album){
-      // console.log(Albums);
-      res.render(Album, {album: album});
+app.post('/api/albums', function newAlbumPost(req, res) {
+    var newArtistName = req.body.artistName;
+    var newName = req.body.name;
+    var newReleaseDate = req.body.releaseDate;
+    var genres = [req.body.genres];
+    var newAlbum = {
+      artistName: newArtistName,
+      name: newName,
+      releaseDate: newReleaseDate,
+      genres: genres
+    };
+    db.Album.create(newAlbum, function(err, newAlbum) {
+      if(err) {
+        console.log(err);
+      } else {
+        res.redirect('/api/albums');
+      }
+    
   });
+  
+});
+app.delete('/api/albums/:id', function deleteAlbum(req, res) {
 
 });
 
