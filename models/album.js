@@ -1,20 +1,13 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-
-// var song = require('./song.js');
-// var SongSchema = require('Song').schema;
-
-var SongSchema = new Schema ({
-	 name: String,
-  	 trackNumber: Number
-});
+var Song = require('./song.js');
 
 var AlbumSchema = new Schema({
   artistName: String,
   name: String,
   releaseDate: String,
-  genres: [ String ],
-  songs: [SongSchema]
+  genres: [String],
+  songs: [Song.schema]
 });
 
 var Album = mongoose.model('Album', AlbumSchema);
